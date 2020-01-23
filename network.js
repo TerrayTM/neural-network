@@ -4,12 +4,14 @@
 
 const sigmoid = {
   activation: input => 1 / (1 + Math.exp(-input)),
-  derivative: input => input * (1 - input)
+  derivative: input => input * (1 - input),
+  name: 'sigmoid'
 };
 
 const tanh = {
   activation: input => Math.tanh(input),
-  derivative: input => 1 - input * input
+  derivative: input => 1 - input * input,
+  name: 'tanh'
 };
 
 class Neuron {
@@ -39,6 +41,10 @@ class Neuron {
     this._value = value;
   }
 
+  setWeights(weights) {
+    this._weights = weights;
+  }
+
   info() {
     return `(w=[${this._weights.map(weight => weight.toFixed(3)).join(',')}], b=${this._bias.toFixed(3)}, v=${this._value.toFixed(3)})`;
   }
@@ -58,6 +64,18 @@ class Neuron {
 
   get value() {
     return this._value;
+  }
+
+  get weights() {
+    return this._weights;
+  }
+
+  get minWeight() {
+    return Math.min(...this._weights);
+  }
+
+  get maxWeight() {
+    return Math.max(...this._weights);
   }
 }
 
@@ -99,6 +117,22 @@ class Layer {
     }
     return results;
   }
+
+  get size() {
+    return this._neurons.length;
+  }
+
+  get neurons() {
+    return this._neurons;
+  }
+
+  get minWeight() {
+    return Math.min(...this._neurons.map(neuron => neuron.minWeight));
+  }
+
+  get maxWeight() {
+    return Math.max(...this._neurons.map(neuron => neuron.maxWeight));
+  }
 }
 
 class Network {
@@ -110,12 +144,34 @@ class Network {
     this._layers.push(new Layer(outputs, hiddenLayers[hiddenLayers.length - 1], activation, learningRate));
     this._inputLayer = this._layers[0];
     this._outputLayer = this._layers[this._layers.length - 1];
+    this._activation = activation.name;
+    this._learningRate = learningRate;
+  }
+
+  static restore({ weights, activation, learningRate }) {
+    if (activation === 'sigmoid') {
+      activation = sigmoid;
+    } else if (activation === 'tanh') {
+      activation = tanh;
+    }
+    const layerSizes = [];
+    for (let i = 1; i < weights.length - 1; ++i) {
+      layerSizes.push(weights[i].length);
+    }
+    const network = new Network(weights[0].length, weights[weights.length - 1].length, layerSizes, activation, learningRate);
+    for (let i = 0; i < weights.length; ++i) {
+      for (let j = 0; j < weights[i].length; ++j) {
+        network.layers[i].neurons[j].setWeights(weights[i][j]);
+      }
+    }
+    return network;
   }
 
   feedForward() {
     for (let i = 1; i < this._layers.length; ++i) {
       this._layers[i].computeOutputs(this._layers[i - 1].getOutputs());
     }
+    return this._outputLayer.getOutputs();
   }
 
   setInputs(inputs) {
@@ -140,5 +196,27 @@ class Network {
     this.setInputs(inputs);
     this.feedForward();
     return this._outputLayer.getOutputs();
+  }
+
+  export() {
+    return {
+      weights: this._layers.map(layer => layer.neurons.map(neuron => neuron.weights)),
+      minWeight: this.minWeight,
+      maxWeight: this.maxWeight,
+      activation: this._activation,
+      learningRate: this._learningRate
+    };
+  }
+
+  get layers() {
+    return this._layers;
+  }
+
+  get minWeight() {
+    return Math.min(...this._layers.map(layer => layer.minWeight));
+  }
+
+  get maxWeight() {
+    return Math.max(...this._layers.map(layer => layer.maxWeight));
   }
 }
