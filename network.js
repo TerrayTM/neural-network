@@ -139,7 +139,7 @@ class Network {
   constructor(inputs, outputs, hiddenLayers, activation, learningRate) {
     this._layers = [new Layer(inputs, 0, activation, learningRate)];
     for (let i = 0; i < hiddenLayers.length; ++i) {
-      this._layers.push(new Layer(hiddenLayers[i], i == 0 ? inputs : hiddenLayers[i - 1], activation, learningRate));
+      this._layers.push(new Layer(hiddenLayers[i], i === 0 ? inputs : hiddenLayers[i - 1], activation, learningRate));
     }
     this._layers.push(new Layer(outputs, hiddenLayers[hiddenLayers.length - 1], activation, learningRate));
     this._inputLayer = this._layers[0];
