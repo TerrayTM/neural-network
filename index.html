@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Neural Network</title>
+        <link rel="shortcut icon" href="https://terrytm.com/favicon.ico">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <style>
+            .container {
+                padding: 64px 0;
+                text-align: center; 
+            }
+
+            html,
+            body {
+                padding: 0;
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: #f5f5fc;
+            }
+
+            body {
+                margin: 0 0 76px;
+            }
+
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+
+            .header {
+                padding: 64px;
+                background-color: #183D4E;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 42px;
+                margin-top: 0;
+                color: ghostwhite;
+            }
+
+            .header p {
+                margin: 0;
+                font-size: 22px;
+                color: ghostwhite;
+            }
+
+            .control {
+                padding: 20px 0;
+                border-bottom: 1px solid #d2d2f3;
+                font-size: 18px;
+                background-color: white;
+            }
+
+            .control p {
+                margin: 0;
+            }
+
+            .holder {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 80%;
+                margin: auto;
+            }
+
+            button {
+                font-size: 18px;
+                background-color: purple;
+                border: none;
+                border-radius: 4px;
+                outline: none !important;
+                padding: 0 38px;
+                height: 44px;
+                color: white;
+                cursor: pointer;
+                opacity: 1;
+                transition: opacity 0.3s;
+            }
+
+            button:hover {
+                opacity: 0.7;
+            }
+
+            footer {
+                border-top: 1px solid #84bace;
+                background-color: #2668f7;
+                text-align: center;
+                padding: 24px;
+                color: white;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            footer p {
+                margin: 0;
+                font-size: 18px;
+            }
+
+            footer a {
+                text-decoration: none;
+                color: white;
+            }
+
+            label {
+                margin-right: 12px;
+            }
+
+            #canvas {
+                border: 1px solid #aeaee0;
+                border-radius: 6px;
+                transition: border 0.3s;
+                margin-bottom: 56px;
+            }
+
+            #canvas:hover {
+                border: 1px solid #8888d4;
+            }
+
+            .form-group {
+                margin: 0;
+            }
+
+            #result {
+                display: grid;
+                grid-template-columns: auto auto auto auto auto auto;
+            }
+
+            .error {
+                background-color: #ff7070;
+            }
+
+            #result span {
+                padding: 8px;
+                border-radius: 4px;
+            }
+
+            @media (max-width: 1260px) {
+                .holder {
+                    flex-flow: column;
+                    height: 360px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <section class="header">
+            <h1>Neural Network Visualization</h1>
+            <p>Learning single digit addition with machine learning.</p>
+        </section>
+        <section class="control">
+            <div class="holder">
+                <button id="start">Start</button i>
+                <p id="epoch">Epoch: 0000000</p>
+                <div class="form-group form-inline">
+                    <label>Learning Rate:</label>
+                    <select class="form-control" id="rate">
+                        <option>1</option>
+                        <option>0.75</option>
+                        <option selected>0.5</option>
+                        <option>0.05</option>
+                        <option>0.005</option>
+                    </select>
+                </div>
+                <div class="form-group form-inline">
+                    <label>Hidden Layers:</label>
+                    <select class="form-control" id="layers">
+                        <option value="0">[3]</option>
+                        <option value="1" selected>[3, 3]</option>
+                        <option value="2">[3, 6, 3]</option>
+                        <option value="3">[3, 6, 6, 3]</option>
+                    </select>
+                </div>
+                <div class="form-group form-inline">
+                    <label>Activation:</label>
+                    <select class="form-control" id="activation">
+                        <option selected>Tanh</option>
+                        <option>Sigmoid</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+        <section class="container">
+            <canvas id="canvas"></canvas>
+            <div style="margin: auto auto 52px auto;">
+                <canvas id="graph"></canvas>
+            </div>
+            <h2>Predictions</h2>
+            <hr/>
+            <div id="result"></div>
+        </section>
+        <script src="network.js"></script>
+        <script src="handler.js"></script>
+        <footer>
+            <p>Copyright © <a href="https://terrytm.com">Terry™</a> 2020</p>
+        </footer>
+    </body>
+</html>
