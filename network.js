@@ -1,6 +1,6 @@
-//--------------------------------------------------------
-//| Simple neural networks implementation by Terry Zheng |
-//--------------------------------------------------------
+//-------------------------------------------------------
+//| Simple neural network implementation by Terry Zheng |
+//-------------------------------------------------------
 
 const sigmoid = {
   activation: input => 1 / (1 + Math.exp(-input)),
